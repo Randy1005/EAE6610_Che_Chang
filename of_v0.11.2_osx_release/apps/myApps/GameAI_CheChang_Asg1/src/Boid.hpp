@@ -9,30 +9,74 @@
 #define Boid_hpp
 
 #include <stdio.h>
+#include <vector>
 #include <ofVec2f.h>
 #include <ofMain.h>
+#include "BreadCrumb.hpp"
 
 #define DRAW_STROKE 2
+#define MAX_BREADCRUMBS 1000
+#define INTERVAL_BREADCRUMB 5
 
 struct RigidBody {
     ofVec2f position;
     ofVec2f velocity;
-    ofVec2f acceleration;
+    ofVec2f linear_acceleration;
     float orientation;
+    float angular_velocity;
+    float angular_acceleration;
+};
+
+struct DynamicSteeringOutput {
+    ofVec2f linear_acceleration;
+    float angular_acceleration;
 };
 
 class Boid {
 public:
-    Boid(float i_posx, float i_posy, float i_radius, float i_orientation, ofColor i_color);
+    Boid(float i_posx, float i_posy, float i_radius, float i_orientation, ofColor i_color, float i_window_width, float i_window_height);
     void Draw();
     void Update();
+    
+    
+    // ---- movement algorithm functions ---- //
+    // simple demo: moves along the edge
+    ofVec2f MoveAlongWindowEdge();
+    
+    // seek (arrive)
+    DynamicSteeringOutput Seek(ofVec2f i_target_pos, float i_max_linear_acceleration, float i_max_speed, float i_slow_radius, float i_target_radius, float i_time_to_target);
+    
+    // align
+    DynamicSteeringOutput Align(float i_target_orientation, float i_max_angular_velocity, float i_max_angular_acceleration, float i_slow_angle, float i_target_angle, float i_time_to_target);
+    
+    // look where you're going
+    DynamicSteeringOutput LookWhereYoureGoing();
+    
+    // wander
+    DynamicSteeringOutput Wander(float i_wander_radius, float i_wander_rate, float i_max_linear_acceleration);
+    
+    
+    
     
     RigidBody rigid_body;
     float radius;
     ofColor color;
+    
+    // recording mouse clicks
+    int mouse_x = 0, mouse_y = 0;
 private:
+    // Maintain a vector of breadcrumbs
+    std::vector<BreadCrumb*> breadcrumbs;
+    int breadcrumb_index = 0;
+    
+    // we wanna leave a breadcrumb every N frames
+    size_t timer = INTERVAL_BREADCRUMB;
+    
+    float app_window_width, app_window_height;
     float nose_length_;
     float GetOrientationInDegrees();
+    float MapOrientationToRange(float i_orientation);
+    
     
     
 };

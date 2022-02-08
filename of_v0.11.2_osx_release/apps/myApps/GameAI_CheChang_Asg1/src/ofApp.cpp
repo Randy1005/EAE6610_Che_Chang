@@ -1,12 +1,16 @@
 #include "ofApp.h"
 
+// TODO: implement "reappear from other side if boid goes out of range"
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     
     // test boid
-    boid = new Boid(ofGetWidth() / 2, ofGetHeight() / 2, 10, 0, ofColor::orange);
+    boid = new Boid(200, 400, 10, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
     boid->rigid_body.velocity = ofVec2f(0.4f, 0.4f);
-    boid->rigid_body.acceleration = ofVec2f(0.01f, -0.02f);
+
+
+
 }
 
 //--------------------------------------------------------------
@@ -18,6 +22,8 @@ void ofApp::update(){
 void ofApp::draw(){
     boid->Draw();
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -41,7 +47,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    boid->mouse_x = x;
+    boid->mouse_y = y;
 }
 
 //--------------------------------------------------------------

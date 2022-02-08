@@ -9,5 +9,18 @@
 #define BreadCrumb_hpp
 
 #include <stdio.h>
+#include <ofMain.h>
+#include <ofVec2f.h>
+
+class BreadCrumb {
+public:
+    BreadCrumb(float i_posx, float i_posy, float i_radius, ofColor i_color);
+    void Draw();
+    
+    ofVec2f position;
+    ofColor color;
+    float radius;
+};
+
 
 #endif /* BreadCrumb_hpp */

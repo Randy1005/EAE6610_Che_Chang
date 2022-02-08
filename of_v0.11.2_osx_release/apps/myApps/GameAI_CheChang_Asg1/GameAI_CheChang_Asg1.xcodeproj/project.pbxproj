@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CC265FB127ADDE0C00CA1FBD /* Boid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC265FAF27ADDE0C00CA1FBD /* Boid.cpp */; };
+		CC265FB427AF096300CA1FBD /* BreadCrumb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC265FB227AF096300CA1FBD /* BreadCrumb.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,8 @@
 /* Begin PBXFileReference section */
 		CC265FAF27ADDE0C00CA1FBD /* Boid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Boid.cpp; sourceTree = "<group>"; };
 		CC265FB027ADDE0C00CA1FBD /* Boid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Boid.hpp; sourceTree = "<group>"; };
+		CC265FB227AF096300CA1FBD /* BreadCrumb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BreadCrumb.cpp; sourceTree = "<group>"; };
+		CC265FB327AF096300CA1FBD /* BreadCrumb.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BreadCrumb.hpp; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -538,6 +541,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				CC265FAF27ADDE0C00CA1FBD /* Boid.cpp */,
 				CC265FB027ADDE0C00CA1FBD /* Boid.hpp */,
+				CC265FB227AF096300CA1FBD /* BreadCrumb.cpp */,
+				CC265FB327AF096300CA1FBD /* BreadCrumb.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -642,6 +647,7 @@
 			files = (
 				CC265FB127ADDE0C00CA1FBD /* Boid.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				CC265FB427AF096300CA1FBD /* BreadCrumb.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
