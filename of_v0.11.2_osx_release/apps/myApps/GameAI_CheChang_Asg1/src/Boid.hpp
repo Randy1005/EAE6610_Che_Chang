@@ -46,6 +46,12 @@ public:
     // seek (arrive)
     DynamicSteeringOutput Seek(ofVec2f i_target_pos, float i_max_linear_acceleration, float i_max_speed, float i_slow_radius, float i_target_radius, float i_time_to_target);
     
+    // flee
+    DynamicSteeringOutput Flee(ofVec2f i_target_pos, float i_max_linear_acceleration);
+    
+    // evade
+    DynamicSteeringOutput Evade(RigidBody i_target_rb, float i_personal_radius, float i_max_linear_acceleration, float i_decay);
+    
     // align
     DynamicSteeringOutput Align(float i_target_orientation, float i_max_angular_velocity, float i_max_angular_acceleration, float i_slow_angle, float i_target_angle, float i_time_to_target);
     
@@ -54,9 +60,6 @@ public:
     
     // wander
     DynamicSteeringOutput Wander(float i_wander_radius, float i_wander_rate, float i_max_linear_acceleration);
-    
-    
-    
     
     RigidBody rigid_body;
     float radius;

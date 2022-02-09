@@ -4,23 +4,34 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
     // test boid
-    boid = new Boid(200, 400, 10, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
-    boid->rigid_body.velocity = ofVec2f(0.4f, 0.4f);
-
-
-
+    boid = new Boid(500, 320, 10, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
+    boid->rigid_body.linear_acceleration = ofVec2f(-0.15f, 0.01f);
+    
+    boid2 = new Boid(500, 400, 10, 0, ofColor::green, ofGetWidth(), ofGetHeight());
+    boid2->rigid_body.linear_acceleration = ofVec2f(-0.15f, 0.01f);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     boid->Update();
+    boid2->Update();
+    
+    boid->rigid_body.linear_acceleration = boid->Evade(boid2->rigid_body, boid->radius + 5.0f, 0.02f, 0.1f).linear_acceleration;
+    
+    boid->rigid_body.angular_acceleration = boid->LookWhereYoureGoing().angular_acceleration;
+
+    
+    boid2->rigid_body.angular_acceleration = boid2->LookWhereYoureGoing().angular_acceleration;
+    
+
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     boid->Draw();
+    boid2->Draw();
 }
 
 

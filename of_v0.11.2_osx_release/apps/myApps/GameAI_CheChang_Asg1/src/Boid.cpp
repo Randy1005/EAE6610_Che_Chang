@@ -42,11 +42,6 @@ void Boid::Draw() {
 }
 
 void Boid::Update() {
-    // insert movement algorithms here
-    // wander: it's always rotating counter-clockwisely?
-    DynamicSteeringOutput steering_output = Wander(20.0f, 2.0f, 0.04f);
-    rigid_body.linear_acceleration = steering_output.linear_acceleration;
-    rigid_body.angular_acceleration = steering_output.angular_acceleration;
     
     // angular velocity update
     rigid_body.angular_velocity += rigid_body.angular_acceleration;
@@ -132,6 +127,34 @@ DynamicSteeringOutput Boid::Seek(ofVec2f i_target_pos, float i_max_linear_accele
     return result;
 }
 
+DynamicSteeringOutput Boid::Flee(ofVec2f i_target_pos, float i_max_linear_acceleration) {
+    DynamicSteeringOutput result;
+    result.linear_acceleration = rigid_body.position - i_target_pos;
+    result.linear_acceleration.normalize();
+    result.linear_acceleration *= i_max_linear_acceleration;
+    result.angular_acceleration = 0.0f;
+    return result;
+}
+
+DynamicSteeringOutput Boid::Evade(RigidBody i_target_rb, float i_personal_radius, float i_max_linear_acceleration, float i_decay) {
+    float distance = (i_target_rb.position - rigid_body.position).length();
+    // case 1: target is outside personal radius, linear accel = 0
+    
+    // case 2: if the target is within personal radius
+    float repulsion, strength;
+    if (distance <= i_personal_radius) {
+        repulsion = i_decay / (distance * distance);
+        
+    } else {
+        // i_max_linear_acceleration = 0;
+    }
+    
+    strength = min(repulsion, i_max_linear_acceleration);
+    
+    return Flee(i_target_rb.position, strength);
+    
+}
+
 DynamicSteeringOutput Boid::Align(float i_target_orientation, float i_max_angular_velocity, float i_max_angular_acceleration, float i_slow_angle, float i_target_angle, float i_time_to_target) {
     float angle_diff = i_target_orientation - rigid_body.orientation;
     // normalize to [-PI, PI]
@@ -177,7 +200,7 @@ DynamicSteeringOutput Boid::LookWhereYoureGoing() {
     float target_orientation = atan2(-rigid_body.velocity.x, rigid_body.velocity.y);
     
     // delegate to Align
-    return Align(target_orientation, 0.06f, 0.01f, 1.0f, 0.1f, 5.0f);
+    return Align(target_orientation, 0.02f, 0.005f, 1.5f, 0.3f, 5.0f);
 }
 
 
