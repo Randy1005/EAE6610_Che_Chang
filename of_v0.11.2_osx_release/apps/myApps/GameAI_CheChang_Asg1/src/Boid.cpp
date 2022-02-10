@@ -145,8 +145,6 @@ DynamicSteeringOutput Boid::Evade(RigidBody i_target_rb, float i_personal_radius
     if (distance <= i_personal_radius) {
         repulsion = i_decay / (distance * distance);
         
-    } else {
-        // i_max_linear_acceleration = 0;
     }
     
     strength = min(repulsion, i_max_linear_acceleration);
@@ -200,7 +198,7 @@ DynamicSteeringOutput Boid::LookWhereYoureGoing() {
     float target_orientation = atan2(-rigid_body.velocity.x, rigid_body.velocity.y);
     
     // delegate to Align
-    return Align(target_orientation, 0.02f, 0.005f, 1.5f, 0.3f, 5.0f);
+    return Align(target_orientation, 0.02f, 0.01f, 0.03f, 0.01f, 0.5f);
 }
 
 

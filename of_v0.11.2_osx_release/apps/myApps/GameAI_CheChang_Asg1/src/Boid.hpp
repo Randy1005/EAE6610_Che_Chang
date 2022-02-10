@@ -25,6 +25,7 @@ struct RigidBody {
     float orientation;
     float angular_velocity;
     float angular_acceleration;
+    float mass;
 };
 
 struct DynamicSteeringOutput {
