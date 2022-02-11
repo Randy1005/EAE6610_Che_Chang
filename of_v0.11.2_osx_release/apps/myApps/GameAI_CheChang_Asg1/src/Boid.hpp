@@ -70,16 +70,17 @@ public:
     int mouse_x = 0, mouse_y = 0;
 private:
     // Maintain a vector of breadcrumbs
-    std::vector<BreadCrumb*> breadcrumbs;
-    int breadcrumb_index = 0;
+    std::vector<BreadCrumb*> breadcrumbs_;
+    int breadcrumb_index_ = 0;
     
     // we wanna leave a breadcrumb every N frames
-    size_t timer = INTERVAL_BREADCRUMB;
+    size_t timer_ = INTERVAL_BREADCRUMB;
     
-    float app_window_width, app_window_height;
+    float app_window_width_, app_window_height_;
     float nose_length_;
     float GetOrientationInDegrees();
     float MapOrientationToRange(float i_orientation);
+    void WrapAround();
     
     
     

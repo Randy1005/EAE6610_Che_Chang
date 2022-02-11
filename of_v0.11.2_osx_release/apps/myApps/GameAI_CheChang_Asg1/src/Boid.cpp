@@ -12,17 +12,16 @@ Boid::Boid(float i_posx, float i_posy, float i_radius, float i_orientation, ofCo
     this->rigid_body.orientation = i_orientation;
     this->color = i_color;
     this->nose_length_ = 2 * this->radius;
-    this->app_window_width = i_window_width;
-    this->app_window_height = i_window_height;
-    
+    this->app_window_width_ = i_window_width;
+    this->app_window_height_ = i_window_height;
     
 }
 
 void Boid::Draw() {
-    // draw breadcrumbs
-    for (size_t i = 0; i < breadcrumbs.size(); i++) {
-        if (breadcrumbs[i])
-            breadcrumbs[i]->Draw();
+    // draw breadcrumbs_
+    for (size_t i = 0; i < breadcrumbs_.size(); i++) {
+        if (breadcrumbs_[i])
+            breadcrumbs_[i]->Draw();
     }
     
     ofPushMatrix();
@@ -57,25 +56,27 @@ void Boid::Update() {
     rigid_body.position += rigid_body.velocity;
     
     // instantiate/update breadcrumb positions
-    if (timer-- <= 0) {
-        timer = INTERVAL_BREADCRUMB;
+    if (timer_-- <= 0) {
+        timer_ = INTERVAL_BREADCRUMB;
         
-        if (breadcrumb_index++ < MAX_BREADCRUMBS) {
-            breadcrumbs.push_back(new BreadCrumb(rigid_body.position.x, rigid_body.position.y, 2.0f, ofColor::blueSteel));
+        if (breadcrumb_index_++ < MAX_BREADCRUMBS) {
+            breadcrumbs_.push_back(new BreadCrumb(rigid_body.position.x, rigid_body.position.y, 2.0f, ofColor::blueSteel));
         }
         else {
-            // reuse the already instantiated breadcrumbs,
+            // reuse the already instantiated breadcrumbs_,
             // just update their positions
-            breadcrumbs[breadcrumb_index % MAX_BREADCRUMBS]->position = rigid_body.position;
+            breadcrumbs_[breadcrumb_index_ % MAX_BREADCRUMBS]->position = rigid_body.position;
             
             // if the breadcrumb indes becomes too big, set it back
             // to MAX_BREADCRUMS + 1
-            if (breadcrumb_index > 60000) {
-                breadcrumb_index = MAX_BREADCRUMBS + 1;
+            if (breadcrumb_index_ > 60000) {
+                breadcrumb_index_ = MAX_BREADCRUMBS + 1;
             }
             
         }
     }
+    
+    WrapAround();
 }
 
 // simple demo that moves the boid along the edge
@@ -83,9 +84,9 @@ ofVec2f Boid::MoveAlongWindowEdge() {
     if (rigid_body.position.x < 50 && rigid_body.position.y >= 50) {
         return ofVec2f(0.0f, -3.0f);
     } else if (rigid_body.position.x >= 50 || rigid_body.position.y < 50) {
-        if (rigid_body.position.x < app_window_width - 50) {
+        if (rigid_body.position.x < app_window_width_ - 50) {
             return ofVec2f(3.0f, 0.0f);
-        } else if (rigid_body.position.x >= app_window_width - 50) {
+        } else if (rigid_body.position.x >= app_window_width_ - 50) {
             return ofVec2f(0.0f, 3.0f);
         }
     }
@@ -198,7 +199,7 @@ DynamicSteeringOutput Boid::LookWhereYoureGoing() {
     float target_orientation = atan2(-rigid_body.velocity.x, rigid_body.velocity.y);
     
     // delegate to Align
-    return Align(target_orientation, 0.02f, 0.01f, 0.03f, 0.01f, 0.5f);
+    return Align(target_orientation, 0.08f, 0.04f, 0.03f, 0.01f, 0.5f);
 }
 
 
@@ -206,7 +207,7 @@ DynamicSteeringOutput Boid::Wander(float i_wander_radius, float i_wander_rate, f
     // get a random angle
     float target_orientation = rigid_body.orientation + ofRandom(-1.0f, 1.0f) * i_wander_rate;
     // get a random target position located on the circumference
-    ofVec2f target_pos = ofVec2f(cos(target_orientation) * i_wander_radius, sin(target_orientation) * i_wander_radius) + rigid_body.position;
+    ofVec2f target_pos = ofVec2f(cosf(target_orientation) * i_wander_radius, sinf(target_orientation) * i_wander_radius) + rigid_body.position;
     
     DynamicSteeringOutput result;
     result.linear_acceleration = Seek(target_pos, i_max_linear_acceleration, 1.0f, 20, 10, 1.0f).linear_acceleration;
@@ -224,12 +225,18 @@ float Boid::MapOrientationToRange(float i_orientation) {
 
 
 
-
-
-
 float Boid::GetOrientationInDegrees() {
     // don't know why there's a 90 degree diff, so I had to offset this manually
     return (rigid_body.orientation * 180.0f) / PI + 90;
+}
+
+// wrap boids around if they go out of bounds
+void Boid::WrapAround() {
+    if (rigid_body.position.x < -5) rigid_body.position.x += app_window_width_;
+    if (rigid_body.position.y < -5) rigid_body.position.y += app_window_height_;
+    
+    if (rigid_body.position.x > app_window_width_ + 5) rigid_body.position.x -= app_window_width_;
+    if (rigid_body.position.y > app_window_height_ + 5) rigid_body.position.y -= app_window_height_;
 }
 
 

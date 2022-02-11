@@ -48,7 +48,7 @@ DynamicSteeringOutput Flocking::GetSteeringOutput() {
     
     
     DynamicSteeringOutput seek_output = separation_behavior->character_boid->Seek(center_mass_pos, max_linear_accel, 0.1f, 5.0f, 1.0f, 0.5f);
-    output.linear_acceleration += seek_output.linear_acceleration;
+    output.linear_acceleration += arrive_weight * seek_output.linear_acceleration;
     
     // crop to max
     float accel_mag = output.linear_acceleration.length();

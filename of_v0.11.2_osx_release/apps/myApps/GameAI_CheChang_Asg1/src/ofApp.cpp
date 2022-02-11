@@ -33,6 +33,14 @@ void ofApp::setup(){
     boid4->rigid_body.mass = 1.0f;
     all_boids.push_back(boid4);
     
+    boid5 = new Boid(580, 340, 10, 0, ofColor::green, ofGetWidth(), ofGetHeight());
+    boid5->rigid_body.mass = 1.0f;
+    all_boids.push_back(boid5);
+    
+    boid6 = new Boid(560, 330, 10, 0, ofColor::green, ofGetWidth(), ofGetHeight());
+    boid6->rigid_body.mass = 1.0f;
+    all_boids.push_back(boid6);
+    
     // this boid does not need to be drawn, it just has to always have the centroid velocity
     centroid = new Boid(0, 0, 10, 0, ofColor::black, ofGetWidth(), ofGetHeight());
     
@@ -41,37 +49,54 @@ void ofApp::setup(){
     boid_sep_targets.push_back(boid2);
     boid_sep_targets.push_back(boid3);
     boid_sep_targets.push_back(boid4);
+    boid_sep_targets.push_back(boid5);
+    boid_sep_targets.push_back(boid6);
+
     
     boid2_sep_targets.push_back(boid);
     boid2_sep_targets.push_back(boid3);
     boid2_sep_targets.push_back(boid4);
+    boid2_sep_targets.push_back(boid5);
+    boid2_sep_targets.push_back(boid6);
     
     boid3_sep_targets.push_back(boid);
     boid3_sep_targets.push_back(boid2);
     boid3_sep_targets.push_back(boid4);
+    boid3_sep_targets.push_back(boid5);
+    boid3_sep_targets.push_back(boid6);
     
     boid4_sep_targets.push_back(boid);
     boid4_sep_targets.push_back(boid2);
     boid4_sep_targets.push_back(boid3);
+    boid4_sep_targets.push_back(boid5);
+    boid4_sep_targets.push_back(boid6);
     
     
     
     
-    separation_behavior = new Separation(boid, boid_sep_targets, boid->radius + 2.0f, 0.01f, 6.0f);
-    separation_behavior2 = new Separation(boid2, boid2_sep_targets, boid2->radius + 2.0f, 0.01f, 6.0f);
-    separation_behavior3 = new Separation(boid3, boid3_sep_targets, boid3->radius + 2.0f, 0.01f, 6.0f);
-    separation_behavior4 = new Separation(boid4, boid4_sep_targets, boid4->radius + 2.0f, 0.01f, 6.0f);
+    
+    
+    separation_behavior = new Separation(boid, boid_sep_targets, boid->radius + 5.0f, 0.01f, 6.0f);
+    separation_behavior2 = new Separation(boid2, boid2_sep_targets, boid2->radius + 5.0f, 0.01f, 6.0f);
+    separation_behavior3 = new Separation(boid3, boid3_sep_targets, boid3->radius + 5.0f, 0.01f, 6.0f);
+    separation_behavior4 = new Separation(boid4, boid4_sep_targets, boid4->radius + 5.0f, 0.01f, 6.0f);
+    separation_behavior5 = new Separation(boid5, boid5_sep_targets, boid5->radius + 5.0f, 0.01f, 6.0f);
+    separation_behavior6 = new Separation(boid6, boid6_sep_targets, boid->radius + 5.0f, 0.01f, 6.0f);
     
     
     velocitymatch_behavior = new VelocityMatch(boid, centroid, 0.2f, 0.5f);
     velocitymatch_behavior2 = new VelocityMatch(boid2, centroid, 2.0f, 0.5f);
     velocitymatch_behavior3 = new VelocityMatch(boid3, centroid, 2.0f, 0.5f);
     velocitymatch_behavior4 = new VelocityMatch(boid4, centroid, 2.0f, 0.5f);
+    velocitymatch_behavior5 = new VelocityMatch(boid5, centroid, 2.0f, 0.5f);
+    velocitymatch_behavior6 = new VelocityMatch(boid6, centroid, 2.0f, 0.5f);
     
-    flocking_behavior = new Flocking(separation_behavior, velocitymatch_behavior, 1.0f, 0.3f, 0.8f, 0.01f, 0.02f);
-    flocking_behavior2 = new Flocking(separation_behavior2, velocitymatch_behavior2, 1.0f, 0.3f, 0.8f, 0.1f, 0.02f);
-    flocking_behavior3 = new Flocking(separation_behavior3, velocitymatch_behavior3, 1.0f, 0.3f, 0.8f, 0.1f, 0.02f);
-    flocking_behavior4 = new Flocking(separation_behavior4, velocitymatch_behavior4, 1.0f, 0.3f, 0.8f, 0.1f, 0.02f);
+    flocking_behavior = new Flocking(separation_behavior, velocitymatch_behavior, 1.0f, 0.6f, 0.8f, 0.01f, 0.02f);
+    flocking_behavior2 = new Flocking(separation_behavior2, velocitymatch_behavior2, 0.2f, 0.8f, 0.3f, 0.1f, 0.02f);
+    flocking_behavior3 = new Flocking(separation_behavior3, velocitymatch_behavior3, 0.2f, 0.8f, 0.3f, 0.1f, 0.02f);
+    flocking_behavior4 = new Flocking(separation_behavior4, velocitymatch_behavior4, 0.2f, 0.8f, 0.3f, 0.1f, 0.02f);
+    flocking_behavior5 = new Flocking(separation_behavior5, velocitymatch_behavior5, 0.2f, 0.8f, 0.3f, 0.1f, 0.02f);
+    flocking_behavior6 = new Flocking(separation_behavior6, velocitymatch_behavior6, 0.2f, 0.8f, 0.3f, 0.1f, 0.02f);
 }
 
 //--------------------------------------------------------------
@@ -92,6 +117,8 @@ void ofApp::update(){
     boid2->Update();
     boid3->Update();
     boid4->Update();
+    boid5->Update();
+    boid6->Update();
     
     if (scene_id == 0) {
         // seek scene
@@ -101,7 +128,7 @@ void ofApp::update(){
         boid->rigid_body.velocity = boid->MoveAlongWindowEdge();
     } else if (scene_id == 2) {
         // wander scene
-        DynamicSteeringOutput steering_output = boid->Wander(30.0f, 2.0f, 1.4f);
+        DynamicSteeringOutput steering_output = boid->Wander(40.0f, 2.0f, 0.04f);
         boid->rigid_body.linear_acceleration = steering_output.linear_acceleration;
         boid->rigid_body.angular_acceleration = steering_output.angular_acceleration;
     } else {
@@ -109,6 +136,9 @@ void ofApp::update(){
         boid2->rigid_body.linear_acceleration = flocking_behavior2->GetSteeringOutput().linear_acceleration;
         boid3->rigid_body.linear_acceleration = flocking_behavior3->GetSteeringOutput().linear_acceleration;
         boid4->rigid_body.linear_acceleration = flocking_behavior4->GetSteeringOutput().linear_acceleration;
+        boid5->rigid_body.linear_acceleration = flocking_behavior5->GetSteeringOutput().linear_acceleration;
+        
+        boid6->rigid_body.linear_acceleration = flocking_behavior6->GetSteeringOutput().linear_acceleration;
         
     }
     
@@ -122,7 +152,9 @@ void ofApp::update(){
     
     boid4->rigid_body.angular_acceleration = boid4->LookWhereYoureGoing().angular_acceleration;
     
-
+    boid5->rigid_body.angular_acceleration = boid5->LookWhereYoureGoing().angular_acceleration;
+    boid6->rigid_body.angular_acceleration = boid6->LookWhereYoureGoing().angular_acceleration;
+    
     
 }
 
@@ -135,6 +167,8 @@ void ofApp::draw(){
     boid2->Draw();
     boid3->Draw();
     boid4->Draw();
+    boid5->Draw();
+    boid6->Draw();
 }
 
 
