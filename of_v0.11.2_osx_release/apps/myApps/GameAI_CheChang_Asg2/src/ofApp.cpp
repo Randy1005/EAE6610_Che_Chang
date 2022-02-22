@@ -40,11 +40,16 @@ void ofApp::setup(){
 //    graph->AddEdge(new Edge(node6, node7, 1.2));
 //    graph->AddEdge(new Edge(node5, node7, 0.2));
 //    graph->AddEdge(new Edge(node5, node8, 6.2));
-//
+
     
     
     tcParser = new GraphTestCaseParser();
     graph = tcParser->BuildGraph("example.txt");
+    
+    
+    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(7));
+    
+    std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(0), graph->GetNodeById(7));
     
 }
 

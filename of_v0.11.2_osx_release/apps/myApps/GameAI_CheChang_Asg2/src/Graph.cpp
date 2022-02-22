@@ -7,9 +7,7 @@
 
 #include "Graph.hpp"
 
-Node::Node(int i_id) {
-    this->id = i_id;
-}
+
 
 Edge::Edge(Node* i_fromNode, Node* i_toNode, float i_cost) {
     this->fromNode_ = i_fromNode;
@@ -48,6 +46,20 @@ std::vector<Edge*> Graph::GetConnections(Node *i_fromNode) {
     return result;
 }
 
+Node* Graph::GetNodeById(int i_nodeId) {
+    for (Edge* edge : allEdges) {
+        if (edge->GetFromNode()->id == i_nodeId) {
+            return edge->GetFromNode();
+        }
+        
+        if (edge->GetToNode()->id == i_nodeId) {
+            return edge->GetToNode();
+        }
+    }
+    
+    return nullptr;
+}
+
 
 PathFindingList::PathFindingList() {
     
@@ -57,6 +69,15 @@ NodeRecord PathFindingList::GetSmallestElement() {
     // sort the pathfinding list using costSoFar (ascending)
     std::sort(nodeRecordList.begin(), nodeRecordList.end(), [](NodeRecord& left, NodeRecord& right) {
         return left.costSoFar < right.costSoFar;
+    });
+    
+    return nodeRecordList.at(0);
+}
+
+NodeRecord PathFindingList::GetSmallestElementByEstimatedCost() {
+    // sort the pathfinding list using estimated total cost (ascending)
+    std::sort(nodeRecordList.begin(), nodeRecordList.end(), [](NodeRecord& left, NodeRecord& right) {
+        return left.estimatedTotalCost < right.estimatedTotalCost;
     });
     
     return nodeRecordList.at(0);
@@ -167,6 +188,9 @@ std::vector<Edge*> Graph::PathFindingDijkstra(Node* i_startNode, Node* i_goalNod
             
             tmpCurrentNodeRecord = closedList->Find(tmpCurrentNodeRecord.edge->GetFromNode());
         }
+        
+        // reverse the result path list
+        std::reverse(pathList.begin(), pathList.end());
     }
 
     
@@ -175,5 +199,129 @@ std::vector<Edge*> Graph::PathFindingDijkstra(Node* i_startNode, Node* i_goalNod
     
 }
 
+
+std::vector<Edge*> Graph::PathFindingAStar(Node* i_startNode, Node* i_goalNode, Heuristics i_heuristics) {
+    
+    // initialize node record for the start node
+    NodeRecord startNodeRecord;
+    startNodeRecord.node = i_startNode;
+    startNodeRecord.edge = new Edge(nullptr, nullptr, 0);
+    startNodeRecord.costSoFar = 0.0f;
+    startNodeRecord.estimatedTotalCost = i_heuristics.GetHeuristicCost(i_startNode);
+    
+    // maintain open and closed list
+    PathFindingList* openList = new PathFindingList();
+    PathFindingList* closedList = new PathFindingList();
+    
+    openList->nodeRecordList.push_back(startNodeRecord);
+    
+    NodeRecord currentNodeRecord;
+    
+    while (openList->nodeRecordList.size() > 0) {
+        
+        currentNodeRecord = openList->GetSmallestElementByEstimatedCost();
+        
+        NodeRecord endNodeRecord;
+        
+        // to cache heuristic, so we don't have to call the possibly
+        // expensive function everytime
+        float endNodeHeuristic;
+        
+        // if it is the goal node, then terminate
+        if (currentNodeRecord.node == i_goalNode) break;
+        
+        // otherwise get its outgoing edges
+        std::vector<Edge*> connections = GetConnections(currentNodeRecord.node);
+        
+        // loop through each connection in turn
+        for (Edge* edge : connections) {
+            // get the cost estimate for the goal node
+            Node* endNode = edge->GetToNode();
+            float endNodeCost = currentNodeRecord.costSoFar + edge->GetCost();
+            
+            // if the node is closed we may have to skip or
+            // remove it from the closed list
+            if (closedList->Contains(endNode)) {
+                
+                // find the record corresponding to the node
+                NodeRecord endNodeRecord = closedList->Find(endNode);
+                
+                // if we didn't find a shorter route, skip
+                if (endNodeRecord.costSoFar <= endNodeCost) continue;
+                
+                // otherwise remove from closed list
+                closedList->Remove(endNodeRecord.node);
+                
+                // calculate heuristic
+                endNodeHeuristic = endNodeRecord.estimatedTotalCost - endNodeCost;
+                
+            }
+            // skip if the node is open and we didn't find a
+            // better route
+            else if (openList->Contains(endNode)) {
+                // find the record corresponding to the node
+                NodeRecord endNodeRecord = openList->Find(endNode);
+                
+                // if our route is no better, skip
+                if (endNodeRecord.costSoFar <= endNodeCost) continue;
+                
+                // calculate heuristic
+                endNodeHeuristic = endNodeRecord.estimatedTotalCost - endNodeCost;
+                
+            }
+            // otherwise we know we have an unvisited node
+            else {
+                // make a record for it
+                NodeRecord endNodeRecord;
+                endNodeRecord.node = endNode;
+                
+                // calculate heuristic
+                endNodeHeuristic = i_heuristics.GetHeuristicCost(endNode);
+            }
+            
+            // update cost, estimate and edge
+            endNodeRecord.costSoFar = endNodeCost;
+            endNodeRecord.edge = edge;
+            endNodeRecord.estimatedTotalCost = endNodeCost + endNodeHeuristic;
+            
+            // add the node to the open list
+            if (!openList->Contains(endNode))
+                openList->nodeRecordList.push_back(endNodeRecord);
+            
+        }
+        
+        // finished looking at the outgoing edges of the current node
+        // add the node to closed list
+        // remove it from open list
+        openList->Remove(currentNodeRecord.node);
+        closedList->nodeRecordList.push_back(currentNodeRecord);
+    }
+    
+    // now we've either found a solution or ran out of nodes to search
+
+    std::vector<Edge*> pathList;
+    if (currentNodeRecord.node != i_goalNode) {
+        // no solution
+        pathList.resize(0);
+        return pathList;
+    }
+    else {
+        NodeRecord tmpCurrentNodeRecord = currentNodeRecord;
+        while (tmpCurrentNodeRecord.node != i_startNode) {
+            pathList.push_back(tmpCurrentNodeRecord.edge);
+            
+            tmpCurrentNodeRecord = closedList->Find(tmpCurrentNodeRecord.edge->GetFromNode());
+        }
+        
+        // reverse the result path list
+        std::reverse(pathList.begin(), pathList.end());
+    }
+
+    
+    // cleanup open / closed list?
+    return pathList;
+    
+    
+}
 
 

@@ -23,7 +23,21 @@ Graph* GraphTestCaseParser::BuildGraph(std::string i_inputFileName) {
         
 //        std::cout << nodeIdA << " " << nodeIdB << " " << edgeCost << std::endl;
         
-        resultGraph->AddEdge(new Edge(new Node(nodeIdA), new Node(nodeIdB), edgeCost));
+        // if node id A is already in the graph
+        if (resultGraph->GetNodeById(nodeIdA)) {
+            resultGraph->AddEdge(new Edge(resultGraph->GetNodeById(nodeIdA), new Node(nodeIdB), edgeCost));
+        }
+        
+        // if node id B is already in the graph
+        else if (resultGraph->GetNodeById(nodeIdB)) {
+            resultGraph->AddEdge(new Edge(new Node(nodeIdA), resultGraph->GetNodeById(nodeIdB), edgeCost));
+        }
+        
+        // if both are new nodes
+        else if (!resultGraph->GetNodeById(nodeIdA) && !resultGraph->GetNodeById(nodeIdB)) {
+            resultGraph->AddEdge(new Edge(new Node(nodeIdA), new Node(nodeIdB), edgeCost));
+        }
+        
         
     }
     
