@@ -18,7 +18,7 @@ public:
     TileGraph(int i_resolutionX, int i_resolutionY, float i_appWidth, float i_appHeight);
     void Draw();
     void GenerateTiles();
-    Tile* FindTileByPosition(ofVec2f& i_position);
+    void GenerateEdges();
     
     std::vector<Tile*> allTiles;
     int resolutionX;

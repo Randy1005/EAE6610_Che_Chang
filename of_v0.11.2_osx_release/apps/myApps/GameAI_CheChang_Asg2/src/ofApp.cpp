@@ -21,9 +21,9 @@ void ofApp::setup(){
     
     
     // test graph
-    tcParser = new GraphTestCaseParser();
-    graph = tcParser->BuildGraph("USA-road-d.NY.gr");
-    
+//    tcParser = new GraphTestCaseParser();
+//    graph = tcParser->BuildGraph("USA-road-d.NY.gr");
+   
     // example.txt graph cartesian coordinates
 //    graph->GetNodeById(0)->nodeWorldPosition_ = ofVec2f(0, 0);
 //    graph->GetNodeById(1)->nodeWorldPosition_ = ofVec2f(2.2f, 3.2f);
@@ -45,7 +45,9 @@ void ofApp::setup(){
     // tile graph set up
     tileGraph = new TileGraph(50, 50, ofGetWidth(), ofGetHeight());
     tileGraph->GenerateTiles();
+    tileGraph->GenerateEdges();
 
+    
 }
 
 //--------------------------------------------------------------
@@ -58,7 +60,20 @@ void ofApp::update(){
     if (mode == 0) {
         // wall mode
 //        boid->rigid_body.linear_acceleration = boid->Seek(ofVec2f(mouseX, mouseY), 0.2f, 2.0f, 20, 5, 0.5f).linear_acceleration;
-    } else if (mode == 1) {
+    } else if (mode == 1 && pathToTarget.size() != 0) {
+        
+        // if we haven't reached our targe yet
+        Edge* currentSeekingEdge = pathToTarget[currentPathNodeId];
+        ofVec2f seekTargetPosition = currentSeekingEdge->GetToNode()->nodeWorldPosition;
+        if ((boid->rigid_body.position - seekTargetPosition).length() >= 4) {
+            // continue seeking
+            boid->rigid_body.linear_acceleration = boid->Seek(seekTargetPosition, 0.2f, 2.0f, 30, 3.5, 0.24f).linear_acceleration;
+        }
+        else {
+            // seek next node
+            if (currentPathNodeId + 1 < pathToTarget.size())
+                currentPathNodeId++;
+        }
         
     }
     
@@ -104,20 +119,36 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
+    float tileSizeX = ofGetWidth() / (float)tileGraph->resolutionX;
+    float tileSizeY = ofGetHeight() / (float)tileGraph->resolutionY;
+    
+    ofVec2f targetTileIndex2D = ofVec2f(floor(x/tileSizeX), floor(y/tileSizeY));
+    
+    int targetTileIndex1D = (int)targetTileIndex2D.x + tileGraph->resolutionX * (int)targetTileIndex2D.y;
+    
+    ofVec2f characterTileIndex2D = ofVec2f(floor(boid->rigid_body.position.x/tileSizeX), floor(boid->rigid_body.position.y/tileSizeY));
+    int characterTileIndex1D = (int)characterTileIndex2D.x + tileGraph->resolutionX * (int)characterTileIndex2D.y;
     
     if (mode == 0) {
         // wall mode
-        float tileSizeX = ofGetWidth() / (float)tileGraph->resolutionX;
-        float tileSizeY = ofGetHeight() / (float)tileGraph->resolutionY;
         
-        ofVec2f tileIndex2D = ofVec2f(floor(x/tileSizeX), floor(y/tileSizeY));
         
-        int tileIndex1D = (int)tileIndex2D.x + tileGraph->resolutionX * (int)tileIndex2D.y;
+        tileGraph->allTiles.at(targetTileIndex1D)->walkable = false;
         
-        tileGraph->allTiles.at(tileIndex1D)->walkable = false;
+        // remove all edges associated with this tile node
+        // !! this somehow doesn't eliminate all 8 edges in between one
+        // !! node and its adjacent nodes
+        for (std::vector<Edge*>::iterator it = tileGraph->allEdges.begin(); it != tileGraph->allEdges.end(); ++it) {
+            // edges to this node
+            if ((*it)->GetToNode()->id == targetTileIndex1D || (*it)->GetFromNode()->id == targetTileIndex1D)
+                tileGraph->allEdges.erase(it);
+        }
     }
     else if (mode == 1) {
         // path find mode
+        Heuristics heuristics(HeuristicFunction::EUCLIDEAN_DIST, tileGraph->GetNodeById(targetTileIndex1D));
+        
+        pathToTarget = tileGraph->PathFindingAStar(tileGraph->GetNodeById(characterTileIndex1D), tileGraph->GetNodeById(targetTileIndex1D), heuristics);
         
     }
     

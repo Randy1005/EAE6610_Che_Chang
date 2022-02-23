@@ -35,6 +35,13 @@ void Graph::AddEdge(Edge *i_newEdge) {
     allEdges.push_back(i_newEdge);
 }
 
+void Graph::RemoveEdge(Edge *i_edge) {
+    for (Edge* edge : allEdges) {
+        if (edge == i_edge)
+            std::remove(allEdges.begin(), allEdges.end(), edge);
+    }
+}
+
 std::vector<Edge*> Graph::GetConnections(Node *i_fromNode) {
     std::vector<Edge*> result;
     for (auto& edge : allEdges) {

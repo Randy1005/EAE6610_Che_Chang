@@ -14,7 +14,7 @@ class Node {
 public:
     Node(int i_id);
     int id;
-    ofVec2f nodeWorldPosition_;
+    ofVec2f nodeWorldPosition;
 };
 
 #endif /* Node_hpp */

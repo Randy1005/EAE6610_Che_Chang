@@ -61,6 +61,7 @@ class Graph {
 public:
     Graph();
     void AddEdge(Edge* i_newEdge);
+    void RemoveEdge(Edge* i_edge);
     std::vector<Edge*> GetConnections(Node* i_fromNode);
     Node* GetNodeById(int i_nodeId);
     

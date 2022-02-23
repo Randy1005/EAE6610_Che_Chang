@@ -84,6 +84,7 @@ public:
     // tile graph
     TileGraph* tileGraph;
     
-
-		
+    // path list
+    std::vector<Edge*> pathToTarget;
+    int currentPathNodeId = 0;
 };
