@@ -22,6 +22,8 @@
 		CC4CDB4E27C3AAF800F4E983 /* GraphTestCaseParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC4CDB4C27C3AAF600F4E983 /* GraphTestCaseParser.cpp */; };
 		CC4CDB5127C4BAE100F4E983 /* Heuristics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC4CDB4F27C4BAE100F4E983 /* Heuristics.cpp */; };
 		CC4CDB5427C4CA8100F4E983 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC4CDB5227C4CA8100F4E983 /* Node.cpp */; };
+		CC4CDB5727C5F42300F4E983 /* Tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC4CDB5527C5F42200F4E983 /* Tile.cpp */; };
+		CC4CDB5A27C5FCA500F4E983 /* TileGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC4CDB5827C5FCA500F4E983 /* TileGraph.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 		EE3071683A1EE4C2FA19564A /* Separation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97CB70EBCB27D687182F5AB6 /* Separation.cpp */; };
@@ -80,6 +82,10 @@
 		CC4CDB5027C4BAE100F4E983 /* Heuristics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Heuristics.hpp; sourceTree = "<group>"; };
 		CC4CDB5227C4CA8100F4E983 /* Node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		CC4CDB5327C4CA8100F4E983 /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
+		CC4CDB5527C5F42200F4E983 /* Tile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Tile.cpp; sourceTree = "<group>"; };
+		CC4CDB5627C5F42300F4E983 /* Tile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Tile.hpp; sourceTree = "<group>"; };
+		CC4CDB5827C5FCA500F4E983 /* TileGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileGraph.cpp; sourceTree = "<group>"; };
+		CC4CDB5927C5FCA500F4E983 /* TileGraph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TileGraph.hpp; sourceTree = "<group>"; };
 		E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxPanel.cpp; path = ../../../addons/ofxGui/src/ofxPanel.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
@@ -648,6 +654,10 @@
 				CC4CDB5027C4BAE100F4E983 /* Heuristics.hpp */,
 				CC4CDB5227C4CA8100F4E983 /* Node.cpp */,
 				CC4CDB5327C4CA8100F4E983 /* Node.hpp */,
+				CC4CDB5527C5F42200F4E983 /* Tile.cpp */,
+				CC4CDB5627C5F42300F4E983 /* Tile.hpp */,
+				CC4CDB5827C5FCA500F4E983 /* TileGraph.cpp */,
+				CC4CDB5927C5FCA500F4E983 /* TileGraph.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -761,11 +771,13 @@
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				853E0BA2F448076739446874 /* ofxColorPicker.cpp in Sources */,
+				CC4CDB5727C5F42300F4E983 /* Tile.cpp in Sources */,
 				CC4CDB4B27C1994B00F4E983 /* Graph.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				852E0891794923EE7583C621 /* ofxInputField.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
 				CC4CDB5427C4CA8100F4E983 /* Node.cpp in Sources */,
+				CC4CDB5A27C5FCA500F4E983 /* TileGraph.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,

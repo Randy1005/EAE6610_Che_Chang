@@ -6,6 +6,7 @@
 #include "VelocityMatch.hpp"
 #include "Flocking.hpp"
 #include "GraphTestCaseParser.hpp"
+#include "TileGraph.hpp"
 
 class ofApp : public ofBaseApp {
     
@@ -27,10 +28,9 @@ public:
     void gotMessage(ofMessage msg);
     
     // mode change buttons
-    void SeekModeButtonPressed();
-    void KinematicModeButtonPressed();
-    void WanderModeButtonPressed();
-    void FlockingModeButtonPressed();
+    void WallModeButtonPressed();
+    void PathFindModeButtonPressed();
+
     
     std::vector<Boid*> boid_sep_targets;
     std::vector<Boid*> boid2_sep_targets;
@@ -68,20 +68,22 @@ public:
     
     Boid* centroid;
     std::vector<Boid*> all_boids;
-    int scene_id;
+    int mode = 0;
 
 
     // gui buttons
     ofxPanel gui_panel;
-    ofxButton seek_mode_btn;
-    ofxButton kinematic_motion_mode_btn;
-    ofxButton wander_mode_btn;
-    ofxButton flocking_mode_btn;
+    ofxButton wallModeBtn;
+    ofxButton pathFindModeBtn;
     
     
     // graph
     Graph* graph;
     GraphTestCaseParser* tcParser;
+    
+    // tile graph
+    TileGraph* tileGraph;
+    
 
 		
 };

@@ -69,8 +69,6 @@ public:
     
     std::vector<Edge*> PathFindingAStar(Node* i_startNode, Node* i_goalNode, Heuristics i_heuristics);
     
-    
-private:
     std::vector<Edge*> allEdges;
 };
 

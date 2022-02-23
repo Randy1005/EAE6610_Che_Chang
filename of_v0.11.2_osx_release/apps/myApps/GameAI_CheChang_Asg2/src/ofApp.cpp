@@ -1,20 +1,19 @@
 #include "ofApp.h"
 
-// TODO: implement "reappear from other side if boid goes out of range"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetWindowShape(1080, 800);
+    
     gui_panel.setup();
     
-    gui_panel.add(seek_mode_btn.setup("seek"));
-    gui_panel.add(kinematic_motion_mode_btn.setup("kinematic motion"));
-    gui_panel.add(wander_mode_btn.setup("wander"));
-    gui_panel.add(flocking_mode_btn.setup("flocking"));
+    gui_panel.add(wallModeBtn.setup("Draw Obstacles"));
+    gui_panel.add(pathFindModeBtn.setup("Path Find"));
+
     
-    seek_mode_btn.addListener(this, &ofApp::SeekModeButtonPressed);
-    kinematic_motion_mode_btn.addListener(this, &ofApp::KinematicModeButtonPressed);
-    wander_mode_btn.addListener(this, &ofApp::WanderModeButtonPressed);
-    flocking_mode_btn.addListener(this, &ofApp::FlockingModeButtonPressed);
+    wallModeBtn.addListener(this, &ofApp::WallModeButtonPressed);
+    pathFindModeBtn.addListener(this, &ofApp::PathFindModeButtonPressed);
+
     
     // test boid
     boid = new Boid(600, 220, 10, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
@@ -22,11 +21,10 @@ void ofApp::setup(){
     
     
     // test graph
-
     tcParser = new GraphTestCaseParser();
     graph = tcParser->BuildGraph("USA-road-d.NY.gr");
     
-    // example.txt cartesian coordinates
+    // example.txt graph cartesian coordinates
 //    graph->GetNodeById(0)->nodeWorldPosition_ = ofVec2f(0, 0);
 //    graph->GetNodeById(1)->nodeWorldPosition_ = ofVec2f(2.2f, 3.2f);
 //    graph->GetNodeById(2)->nodeWorldPosition_ = ofVec2f(0, 2.5f);
@@ -38,11 +36,16 @@ void ofApp::setup(){
     
     
     
-    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(300));
+//    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(300));
     
 //     std::vector<Edge*> path = graph->PathFindingAStar(graph->GetNodeById(2), graph->GetNodeById(300), heuristics);
-     std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(2), graph->GetNodeById(300));
+//     std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(2), graph->GetNodeById(300));
     
+    
+    // tile graph set up
+    tileGraph = new TileGraph(50, 50, ofGetWidth(), ofGetHeight());
+    tileGraph->GenerateTiles();
+
 }
 
 //--------------------------------------------------------------
@@ -52,18 +55,12 @@ void ofApp::update(){
     boid->Update();
     
     
-    if (scene_id == 0) {
-        // seek scene
-        boid->rigid_body.linear_acceleration = boid->Seek(ofVec2f(mouseX, mouseY), 0.2f, 2.0f, 20, 5, 0.5f).linear_acceleration;
-    } else if (scene_id == 1) {
-       
-    } else if (scene_id == 2) {
-        
-    } else {
-        
+    if (mode == 0) {
+        // wall mode
+//        boid->rigid_body.linear_acceleration = boid->Seek(ofVec2f(mouseX, mouseY), 0.2f, 2.0f, 20, 5, 0.5f).linear_acceleration;
+    } else if (mode == 1) {
         
     }
-    
     
     
     boid->rigid_body.angular_acceleration = boid->LookWhereYoureGoing().angular_acceleration;
@@ -76,6 +73,8 @@ void ofApp::draw(){
     gui_panel.draw();
     
     boid->Draw();
+    
+    tileGraph->Draw();
 }
 
 
@@ -98,11 +97,30 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    
+    
+    if (mode == 0) {
+        // wall mode
+        float tileSizeX = ofGetWidth() / (float)tileGraph->resolutionX;
+        float tileSizeY = ofGetHeight() / (float)tileGraph->resolutionY;
+        
+        ofVec2f tileIndex2D = ofVec2f(floor(x/tileSizeX), floor(y/tileSizeY));
+        
+        int tileIndex1D = (int)tileIndex2D.x + tileGraph->resolutionX * (int)tileIndex2D.y;
+        
+        tileGraph->allTiles.at(tileIndex1D)->walkable = false;
+    }
+    else if (mode == 1) {
+        // path find mode
+        
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -135,22 +153,10 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void ofApp::SeekModeButtonPressed() {
-    scene_id = 0;
-    boid->rigid_body.position = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
+void ofApp::WallModeButtonPressed() {
+    mode = 0;
 }
 
-void ofApp::KinematicModeButtonPressed() {
-    scene_id = 1;
-    boid->rigid_body.position = ofVec2f(50, ofGetHeight() - 50);
-}
-
-void ofApp::WanderModeButtonPressed() {
-    scene_id = 2;
-    boid->rigid_body.position = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
-}
-
-void ofApp::FlockingModeButtonPressed() {
-    scene_id = 3;
-    boid->rigid_body.position = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
+void ofApp::PathFindModeButtonPressed() {
+    mode = 1;
 }
