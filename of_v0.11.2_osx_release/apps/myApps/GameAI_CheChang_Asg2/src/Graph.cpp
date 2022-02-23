@@ -272,7 +272,6 @@ std::vector<Edge*> Graph::PathFindingAStar(Node* i_startNode, Node* i_goalNode, 
             // otherwise we know we have an unvisited node
             else {
                 // make a record for it
-                NodeRecord endNodeRecord;
                 endNodeRecord.node = endNode;
                 
                 // calculate heuristic
@@ -320,8 +319,6 @@ std::vector<Edge*> Graph::PathFindingAStar(Node* i_startNode, Node* i_goalNode, 
     
     // cleanup open / closed list?
     return pathList;
-    
-    
 }
 
 

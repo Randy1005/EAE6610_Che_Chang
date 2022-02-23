@@ -17,25 +17,32 @@ Graph* GraphTestCaseParser::BuildGraph(std::string i_inputFileName) {
     for (auto line : buffer.getLines()) {
         std::stringstream ss(line);
         
+        char leadingCharacter;
         float nodeIdA, nodeIdB, edgeCost;
-        
+        ss >> leadingCharacter;
+        // parse arcs, ignore others
+        if (leadingCharacter != 'a') continue;
         ss >> nodeIdA >> nodeIdB >> edgeCost;
         
 //        std::cout << nodeIdA << " " << nodeIdB << " " << edgeCost << std::endl;
         
         // if node id A is already in the graph
-        if (resultGraph->GetNodeById(nodeIdA)) {
+        if (resultGraph->GetNodeById(nodeIdA) && !resultGraph->GetNodeById(nodeIdB)) {
             resultGraph->AddEdge(new Edge(resultGraph->GetNodeById(nodeIdA), new Node(nodeIdB), edgeCost));
         }
         
         // if node id B is already in the graph
-        else if (resultGraph->GetNodeById(nodeIdB)) {
+        else if (resultGraph->GetNodeById(nodeIdB) && !resultGraph->GetNodeById(nodeIdA)) {
             resultGraph->AddEdge(new Edge(new Node(nodeIdA), resultGraph->GetNodeById(nodeIdB), edgeCost));
         }
         
         // if both are new nodes
         else if (!resultGraph->GetNodeById(nodeIdA) && !resultGraph->GetNodeById(nodeIdB)) {
             resultGraph->AddEdge(new Edge(new Node(nodeIdA), new Node(nodeIdB), edgeCost));
+        }
+        // if both are existing nodes
+        else if (resultGraph->GetNodeById(nodeIdA) && resultGraph->GetNodeById(nodeIdB)) {
+            resultGraph->AddEdge(new Edge(resultGraph->GetNodeById(nodeIdA), resultGraph->GetNodeById(nodeIdB), edgeCost));
         }
         
         

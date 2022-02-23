@@ -23,9 +23,11 @@ float Heuristics::GetHeuristicCost(Node* i_startNode) {
             break;
         
         case HeuristicFunction::EUCLIDEAN_DIST:
+            return (goalNode_->nodeWorldPosition_ - i_startNode->nodeWorldPosition_).length();
             break;
         
         case HeuristicFunction::MANHATTAN_DIST:
+            return abs(goalNode_->nodeWorldPosition_.x - i_startNode->nodeWorldPosition_.x) + abs(goalNode_->nodeWorldPosition_.y - i_startNode->nodeWorldPosition_.y);
             break;
             
         default:

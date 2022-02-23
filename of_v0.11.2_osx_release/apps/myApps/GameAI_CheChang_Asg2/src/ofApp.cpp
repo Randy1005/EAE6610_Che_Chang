@@ -22,34 +22,26 @@ void ofApp::setup(){
     
     
     // test graph
-//    graph = new Graph();
-//    Node* node1 = new Node(0);
-//    Node* node2 = new Node(1);
-//    Node* node3 = new Node(2);
-//    Node* node4 = new Node(3);
-//    Node* node5 = new Node(4);
-//    Node* node6 = new Node(5);
-//    Node* node7 = new Node(6);
-//    Node* node8 = new Node(7);
-//
-//    graph->AddEdge(new Edge(node1, node2, 1.2));
-//    graph->AddEdge(new Edge(node1, node3, 3.4));
-//    graph->AddEdge(new Edge(node3, node4, 2.5));
-//    graph->AddEdge(new Edge(node4, node5, 2.3));
-//    graph->AddEdge(new Edge(node4, node6, 3.5));
-//    graph->AddEdge(new Edge(node6, node7, 1.2));
-//    graph->AddEdge(new Edge(node5, node7, 0.2));
-//    graph->AddEdge(new Edge(node5, node8, 6.2));
 
-    
-    
     tcParser = new GraphTestCaseParser();
-    graph = tcParser->BuildGraph("example.txt");
+    graph = tcParser->BuildGraph("USA-road-d.NY.gr");
+    
+    // example.txt cartesian coordinates
+//    graph->GetNodeById(0)->nodeWorldPosition_ = ofVec2f(0, 0);
+//    graph->GetNodeById(1)->nodeWorldPosition_ = ofVec2f(2.2f, 3.2f);
+//    graph->GetNodeById(2)->nodeWorldPosition_ = ofVec2f(0, 2.5f);
+//    graph->GetNodeById(3)->nodeWorldPosition_ = ofVec2f(5.3f, 1.5f);
+//    graph->GetNodeById(4)->nodeWorldPosition_ = ofVec2f(7, 1);
+//    graph->GetNodeById(5)->nodeWorldPosition_ = ofVec2f(7, 3.2f);
+//    graph->GetNodeById(6)->nodeWorldPosition_ = ofVec2f(8, 1.5f);
+//    graph->GetNodeById(7)->nodeWorldPosition_ = ofVec2f(6.5f, 0);
     
     
-    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(7));
     
-    std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(0), graph->GetNodeById(7));
+    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(300));
+    
+//     std::vector<Edge*> path = graph->PathFindingAStar(graph->GetNodeById(2), graph->GetNodeById(300), heuristics);
+     std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(2), graph->GetNodeById(300));
     
 }
 
