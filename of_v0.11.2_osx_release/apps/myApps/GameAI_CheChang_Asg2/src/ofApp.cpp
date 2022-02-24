@@ -9,41 +9,51 @@ void ofApp::setup(){
     
     gui_panel.add(wallModeBtn.setup("Draw Obstacles"));
     gui_panel.add(pathFindModeBtn.setup("Path Find"));
+    gui_panel.add(resetBtn.setup("Reset Obstacles and Clear Pathlist"));
 
     
     wallModeBtn.addListener(this, &ofApp::WallModeButtonPressed);
     pathFindModeBtn.addListener(this, &ofApp::PathFindModeButtonPressed);
-
+    resetBtn.addListener(this, &ofApp::ResetButtonPressed);
     
     // test boid
-    boid = new Boid(600, 220, 10, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
+    boid = new Boid(600, 220, 8, 0, ofColor::orange, ofGetWidth(), ofGetHeight());
     boid->rigid_body.mass = 30.0f; // leader boid
+    boid->rigid_body.angular_velocity = 0.0f;
+    boid->rigid_body.angular_acceleration = 0.0f;
     
     
     // test graph
-//    tcParser = new GraphTestCaseParser();
-//    graph = tcParser->BuildGraph("USA-road-d.NY.gr");
+    tcParser = new GraphTestCaseParser();
+    graph = tcParser->BuildGraph("hsinchu.txt");
    
-    // example.txt graph cartesian coordinates
-//    graph->GetNodeById(0)->nodeWorldPosition_ = ofVec2f(0, 0);
-//    graph->GetNodeById(1)->nodeWorldPosition_ = ofVec2f(2.2f, 3.2f);
-//    graph->GetNodeById(2)->nodeWorldPosition_ = ofVec2f(0, 2.5f);
-//    graph->GetNodeById(3)->nodeWorldPosition_ = ofVec2f(5.3f, 1.5f);
-//    graph->GetNodeById(4)->nodeWorldPosition_ = ofVec2f(7, 1);
-//    graph->GetNodeById(5)->nodeWorldPosition_ = ofVec2f(7, 3.2f);
-//    graph->GetNodeById(6)->nodeWorldPosition_ = ofVec2f(8, 1.5f);
-//    graph->GetNodeById(7)->nodeWorldPosition_ = ofVec2f(6.5f, 0);
+    // example graph cartesian coordinates
+//    graph->GetNodeById(1)->nodeWorldPosition = ofVec2f(0, 0);
+//    graph->GetNodeById(2)->nodeWorldPosition = ofVec2f(2.2f, 3.2f);
+//    graph->GetNodeById(3)->nodeWorldPosition = ofVec2f(0, 2.5f);
+//    graph->GetNodeById(4)->nodeWorldPosition = ofVec2f(5.3f, 1.5f);
+//    graph->GetNodeById(5)->nodeWorldPosition = ofVec2f(7, 1);
+//    graph->GetNodeById(6)->nodeWorldPosition = ofVec2f(7, 3.2f);
+//    graph->GetNodeById(7)->nodeWorldPosition = ofVec2f(8, 1.5f);
+//    graph->GetNodeById(8)->nodeWorldPosition = ofVec2f(6.5f, 0);
+//    graph->GetNodeById(9)->nodeWorldPosition = ofVec2f(3.8f, 6.7f);
+//    graph->GetNodeById(10)->nodeWorldPosition = ofVec2f(12.0f, 2.1f);
+//    graph->GetNodeById(11)->nodeWorldPosition = ofVec2f(16.0f, 5.8f);
+//    graph->GetNodeById(12)->nodeWorldPosition = ofVec2f(2.5f, 18.0f);
     
     
     
-//    Heuristics heuristics(HeuristicFunction::RANDOM, graph->GetNodeById(300));
+    Heuristics heuristics(HeuristicFunction::MANHATTAN_DIST, graph->GetNodeById(10));
+    auto startTime = std::chrono::steady_clock::now();
+//    std::vector<Edge*> path = graph->PathFindingAStar(graph->GetNodeById(1), graph->GetNodeById(10), heuristics);
+//     std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(1), graph->GetNodeById(934));
     
-//     std::vector<Edge*> path = graph->PathFindingAStar(graph->GetNodeById(2), graph->GetNodeById(300), heuristics);
-//     std::vector<Edge*> path = graph->PathFindingDijkstra(graph->GetNodeById(2), graph->GetNodeById(300));
-    
+    auto endTime = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed = endTime - startTime;
+    std::cout << "run time: " << elapsed.count() * 1000.0f << std::endl;
     
     // tile graph set up
-    tileGraph = new TileGraph(50, 50, ofGetWidth(), ofGetHeight());
+    tileGraph = new TileGraph(40, 40, ofGetWidth(), ofGetHeight());
     tileGraph->GenerateTiles();
     tileGraph->GenerateEdges();
 
@@ -58,8 +68,7 @@ void ofApp::update(){
     
     
     if (mode == 0) {
-        // wall mode
-//        boid->rigid_body.linear_acceleration = boid->Seek(ofVec2f(mouseX, mouseY), 0.2f, 2.0f, 20, 5, 0.5f).linear_acceleration;
+
     } else if (mode == 1 && pathToTarget.size() != 0) {
         
         // if we haven't reached our targe yet
@@ -190,4 +199,26 @@ void ofApp::WallModeButtonPressed() {
 
 void ofApp::PathFindModeButtonPressed() {
     mode = 1;
+}
+
+void ofApp::ResetButtonPressed() {
+    boid->rigid_body.position = ofVec2f(600, 220);
+    boid->rigid_body.linear_acceleration = ofVec2f(0, 0);
+    boid->rigid_body.velocity = ofVec2f(0, 0);
+    boid->rigid_body.angular_velocity = 0.0f;
+    boid->rigid_body.angular_acceleration = 0.0f;
+    
+    pathToTarget.clear();
+    
+    // set all tiles back to walkable
+    for (Tile* tile : tileGraph->allTiles) {
+        if (!tile->walkable)
+            tile->walkable = true;
+    }
+    
+    // regenerate edges
+    tileGraph->allEdges.clear();
+    tileGraph->GenerateEdges();
+    
+    
 }

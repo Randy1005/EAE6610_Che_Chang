@@ -199,7 +199,7 @@ DynamicSteeringOutput Boid::LookWhereYoureGoing() {
     float target_orientation = atan2(-rigid_body.velocity.x, rigid_body.velocity.y);
     
     // delegate to Align
-    return Align(target_orientation, 0.08f, 0.04f, 0.03f, 0.01f, 0.5f);
+    return Align(target_orientation, 0.04f, 0.02f, 0.1f, 0.02f, 0.5f);
 }
 
 

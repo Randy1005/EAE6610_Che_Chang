@@ -7,6 +7,7 @@
 #include "Flocking.hpp"
 #include "GraphTestCaseParser.hpp"
 #include "TileGraph.hpp"
+#include <chrono>
 
 class ofApp : public ofBaseApp {
     
@@ -30,6 +31,7 @@ public:
     // mode change buttons
     void WallModeButtonPressed();
     void PathFindModeButtonPressed();
+    void ResetButtonPressed();
 
     
     std::vector<Boid*> boid_sep_targets;
@@ -75,6 +77,7 @@ public:
     ofxPanel gui_panel;
     ofxButton wallModeBtn;
     ofxButton pathFindModeBtn;
+    ofxButton resetBtn;
     
     
     // graph
