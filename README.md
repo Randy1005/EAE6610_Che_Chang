@@ -23,5 +23,5 @@
 
 - How to run
   1. navigate to `EAE6610_Che_Chang/of_v0.11.2_osx_release/apps/myApps/GameAI_CheChang_Asg2/bin/`
-  2. find the executable file `GameAI_CheChang_Asg1.app` (it's somehow stilled named after the first assignment)
+  2. find the executable file `GameAI_CheChang_Asg2.app`
   3. run the app, and there's 3 buttons to switch between modes (Draw Obstacles, Path Find, and Reset)
